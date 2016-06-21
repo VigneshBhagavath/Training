@@ -3,4 +3,6 @@ main()
 {
 	clrscr();
 	printf("Github\n");
+	printf("Github\n");
+	printf("Github\n");
 }
