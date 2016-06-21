@@ -4,3 +4,9 @@ main()
 	clrscr();
 	printf("Github\n");
 }
+
+void sum()
+{
+	int x=3+4;
+	printf("%d\n",x);
+}
