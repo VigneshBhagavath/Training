@@ -1,0 +1,93 @@
+CREATE table "CUSTOMER" (
+    "CUSTOMER_NUMBER" NUMBER(4,0),
+    "CUSTOMER_NAME"   VARCHAR2(40),
+    "EMAIL"           VARCHAR2(40),
+    "HAND_PHONE"      NUMBER(10,0),
+    constraint  "CUSTOMER_PK" primary key ("CUSTOMER_NUMBER")
+)
+/
+
+alter table "CUSTOMER" add
+constraint CUSTOMER_CK1
+check (Hand_Phone >1111111111 and Hand_Phone <10000000000)
+/   
+
+
+
+
+CREATE table "INVOICE" (
+    "INVOICE_ID"   NUMBER(10,0),
+    "INVOICE_DATE" DATE,
+    "AMOUNT"       NUMBER(10,2),
+    "CUSTOMER_REF" NUMBER(10,0),
+    constraint  "INVOICE_PK" primary key ("INVOICE_ID")
+)
+/
+
+ALTER TABLE "INVOICE" ADD CONSTRAINT "INVOICE_FK" 
+FOREIGN KEY ("CUSTOMER_REF")
+REFERENCES "CUSTOMER" ("CUSTOMER_NUMBER")
+ON DELETE CASCADE
+
+/
+
+
+select c.customer_number,c.customer_Name,c.email,c.hand_phone, i.invoice_id,i.invoice_date 
+from customer c,invoice i
+where c.customer_number=i.customer_ref
+
+desc customer
+
+select c.customer_number,c.customer_Name,c.email,c.hand_phone, i.invoice_id,i.invoice_date 
+from customer c,invoice i
+where c.customer_number=i.customer_ref(+)
+
+select b.Invoice_id
+from invoice a,invoice b
+where a.customer_ref =102 and a.invoice_date = b.invoice_date;
+
+select * from Invoice
+
+
+
+
+
+Create or replace procedure addcust(p_cno customer.customer_number%TYPE,
+         p_cname customer.customer_name%TYPE, 
+         p_email customer.email%TYPE, 
+         p_hphone customer.hand_phone%TYPE)
+is
+BEGIN
+	insert into CUSTOMER values(p_cno,p_cname,p_email,p_hphone);
+END;
+
+begin
+addcust(104,'jfhkjghk','gjdfgdfh.com',8877446633);
+end;
+
+
+
+Create or replace procedure findcust(p_cno customer.customer_number%TYPE,
+         p_cname OUT customer.customer_name%TYPE, 
+         p_email OUT customer.email%TYPE)
+is
+BEGIN
+	select customer_name, email into p_cname, p_email from Customer where customer_number = p_cno;
+Exception
+WHEN NO_DATA_FOUND THEN
+			DBMS_OUTPUT.PUT_LINE ('Cno does not exist');
+END;
+
+declare
+v_cname customer.customer_name%TYPE;
+v_email customer.email%TYPE;
+begin
+findcust(105,v_cname,v_email);
+     
+     dbms_output.put_line(v_cname);
+     dbms_output.put_line(v_email);
+end;
+
+
+
+
